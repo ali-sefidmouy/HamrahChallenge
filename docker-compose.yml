@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+
+    # API container
+    django-app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        env_file:
+            - ./api.env
+        # Open http port
+        ports:
+            - "8000:8000"
+        volumes:
+            - .:/code
+
+
+    # Nginx container
+    nginx:
+        restart: always
+        container_name: nginx_server
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        depends_on:
+            - django-app
+        ports:
+            - "0.0.0.0:80:80"
+
